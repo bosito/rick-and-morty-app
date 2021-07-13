@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+.searchBoxContainer {
+  width: 100%;
+  height: 100vh;
+  background: url("https://wallpaperaccess.com/full/238191.png") center
+    center/cover no-repeat;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.containerRight,
+.containerLeft {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.containerMenssage {
+  background: rgba(255, 147, 20, 0.45);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  animation: message 2s linear 3s 1 alternate both;
+  -webkit-box-shadow: 1px 0px 50px 10px rgba(0, 0, 0, 0.64);
+  box-shadow: 1px 0px 50px 10px rgba(0, 0, 0, 0.64);
+}
+
+@keyframes message {
+  0% {
+    opacity: 0;
+    transform: rotateX(-100deg);
+    transform-origin: top;
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+    transform-origin: top;
+  }
+}
+
+.containerLeft {
+  justify-content: center;
+  font-size: 18px;
+  font-family: "Press Start 2P", cursive;
+}
+
+.titleImage {
+  width: 80%;
+  margin-top: -20px;
+  animation: rickandMortyAnimation 2s ease-in 0s infinite alternate both;
+}
+
+@keyframes rickandMortyAnimation {
+  0% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.inputStyle {
+  width: 250px;
+  height: 50px;
+  border-width: 0px;
+  border-color: transparent;
+  font-family: "Press Start 2P", cursive;
+  font-size: 10px;
+  text-align: center;
+}
+
+.iconImage {
+  width: 100px;
+  height: 100px;
+}
+
+.button {
+  width: 250px;
+  height: 25px;
+  margin-top: 20px;
+  border-radius: 50px;
+  border-width: 0px;
+  border-radius: 50px;
+  background: rgba( 255, 147, 20, 0.60 );
+  backdrop-filter: blur( 0.0px );
+  -webkit-backdrop-filter: blur( 0.0px );
+  font-family: "Press Start 2P", cursive;
+  transition: 1s;
+}
+
+.button:hover{
+    transition: 1s;
+    cursor: pointer;
+    border-width: 2px;
+    border-color: #00b0c8;
+    background-color: transparent;
+    color: #00b0c8;
+}

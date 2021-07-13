@@ -1,0 +1,19 @@
+.containerLoading {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.containerAnimation {
+  height: "90%";
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 30px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+}

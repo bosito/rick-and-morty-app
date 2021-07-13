@@ -1,0 +1,15 @@
+.locationInfo{
+    position: absolute;
+    font-size: 20px;
+    color: white;
+    bottom: 0px;
+    right: 2px;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    background: rgba( 255, 147, 20, 0.60 );
+  backdrop-filter: blur( 0.0px );
+  -webkit-backdrop-filter: blur( 0.0px );
+  font-family: "Press Start 2P", cursive;
+}

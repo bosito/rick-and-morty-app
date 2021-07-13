@@ -1,25 +1,71 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import LoadingComponent from './componets/LoadingComponent.js';
+import MenuPrincipal from './views/MenuPrincipal.js';
+import SearchBoxContainer from './views/SearchBoxContainer.js';
+import './styles/App.css';
 
-function App() {
+export default function App() {
+  const [naivigation, setNavigation] = useState("loading");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setNavigation("menuPrincipal");
+    }, 5000);
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="containerPrincipal">
+      {
+        naivigation === "loading" ? (
+          <LoadingComponent />
+        ) : naivigation === "menuPrincipal" ? (
+          <MenuPrincipal setNavigation={setNavigation} />
+        ) : naivigation === "tareaView" ? (
+          <SearchBoxContainer setNavigation={setNavigation} />
+        ) :  naivigation === "extraView" && (
+          <div>
+
+          </div>
+        )
+      }
     </div>
   );
-}
+};
 
-export default App;
+/**
+ * componente para todo lo referente a la ubucacion y los caracteres
+ */
+
+function LocationContainer({ }) {
+  return (
+    <div>
+
+    </div>
+  );
+};
+
+function ResidenContainer({ }) {
+  return (
+    <div>
+
+    </div>
+  );
+};
+
+
+/**
+ * debe mostar la ciguiente informcion.
+ * nombre, 
+ * imagen,
+ * estatus,
+ * lugar de origen,
+ * la cantidad de episodios en ls que aparece.
+ */
+
+function ResidentInfo({ }) {
+  return (
+    <div>
+
+    </div>
+  );
+};

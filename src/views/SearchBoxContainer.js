@@ -3,37 +3,42 @@ import axios from 'axios';
 
 //style
 import '../styles/SearchBoxContainer.css';
-import '../styles/locationInfo.css'
+import '../styles/locationInfo.css';
+import '../styles/residenContainer.css';
 //images
 import icono from '../images/icono.png';
 import titleImage from '../images/titleImage.png';
 
 export default function SearchBoxContainer() {
+
     const [cityName, setCityName] = useState(null);
     const [type, setType] = useState(null);
     const [dimension, setDimension] = useState(null);
     const [residents, setResidents] = useState(null);
     const [inputInfo, setInputInfo] = useState("");
-    const [data, setData] = useState([]);
-    const [arrayNamesDimentions, setArrayNamesDimentions] = useState([]);
+    const [listNameAllDimentoins, setListNameAllDimentoins] = useState(null);
     const [dimentionRandom, setDimentionRandom] = useState(null);
-    const [residentList, setResidentList] = useState(null);
+    const [residentList, setResidentList] = useState([]);
+    const [currentIndex, setcurrentIndex] = useState(null);
+
+    useEffect(() => {
+        //el 108 es el total de dimenciones que hay.
+        const numberRandom = Math.floor(Math.random() * 108).toString();
+        peticionApi('location', numberRandom)
+            .then((response) => {
+                setDimentionRandom(response)
+            }); // episode .... character;
+    }, []);
 
     useEffect(() => {
         peticionApi('location')
             .then((response) => {
-                setDimentionRandom(response[Math.floor(Math.random() * response.length)])
-                setData(response)
-            }) // episode .... character
-    }, []);
-
-    // useEffect(() => {
-    //     console.log(dimentionRandom);
-    // }, [dimentionRandom])
+                setListNameAllDimentoins(response.results)
+            });
+    }, [])
 
     useEffect(() => {
         if (dimentionRandom) {
-            setResidentList(dimentionRandom.residents)
             setResidents(dimentionRandom.residents.length);
             setDimension(dimentionRandom.dimension);
             setType(dimentionRandom.type);
@@ -42,25 +47,54 @@ export default function SearchBoxContainer() {
     }, [dimentionRandom])
 
     useEffect(() => {
-        if (data) {
-            const arrayFilter = [];
-            data.map((element) => {
-                if (element.name) {
-                  return arrayFilter.push(element.name);
-                }
-            });
-            setArrayNamesDimentions(arrayFilter);
-        }
-    }, [data])
+        if (dimentionRandom) {
 
-    const peticionApi = async (url) => {
-        const response = await axios.get(`https://rickandmortyapi.com/api/${url}`);
+            const getIdsCharacter = async () => {
+                const idsResidents = await dimentionRandom.residents.map((residentLink) => {
+                    const element = residentLink.split("/");
+                    return element[element.length - 1]
+                });
+                residentesApi(idsResidents);
+            }
+
+            getIdsCharacter();
+
+        }
+    }, [dimentionRandom]);
+
+    const peticionApi = async (url, idUrl) => {
+        let newUrl;
+        if (url && idUrl) {
+            newUrl = `https://rickandmortyapi.com/api/${url}/${idUrl}`
+        } else {
+            newUrl = `https://rickandmortyapi.com/api/${url}`
+        }
+        const response = await axios.get(newUrl);
         try {
-            return response.data.results
+            return response.data
         } catch (error) {
             console.log(error, 'parece que hay un error');
         };
     };
+
+    const residentesApi = async (idsCharacters) => {
+        const response = await axios.get(`https://rickandmortyapi.com/api/character/${idsCharacters}`);
+        try {
+            setResidentList(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const openClose = (index) => {
+        if (currentIndex === index) {
+            setcurrentIndex(null);
+        } else {
+            setcurrentIndex(index);
+        }
+
+    }
 
     return (
         <div style={{ flex: 1 }}>
@@ -75,7 +109,7 @@ export default function SearchBoxContainer() {
                     <SearchBox
                         inputInfo={inputInfo}
                         setInputInfo={setInputInfo}
-                        arrayNamesDimentions={arrayNamesDimentions}
+                        listNameAllDimentoins={listNameAllDimentoins}
                     />
                 </div>
                 <LocationInfo
@@ -85,16 +119,42 @@ export default function SearchBoxContainer() {
                     residents={residents}
                 />
             </div>
+            <div className="residenContainer">
+
+                <div className="containerResidentData">
+
+                    {residentList.length > 0 && (
+                        residentList?.map((element, index) => {
+                            const { id, name, status, species, type, image, } = element;
+                            return (
+                                <ResidentInfo
+                                    id={id}
+                                    index={index}
+                                    currentIndex={currentIndex}
+                                    name={name}
+                                    status={status}
+                                    type={type ? type : "unknown"}
+                                    species={species}
+                                    image={image}
+                                    onClick={() => openClose(index)}
+                                />
+                            )
+                        })
+                    )}
+                </div>
+
+            </div>
 
         </div>
     );
 };
 
 function SearchBox(props) {
-    const { inputInfo, setInputInfo, arrayNamesDimentions } = props;
+    const { inputInfo, setInputInfo, listNameAllDimentoins } = props;
 
+    //validacion del formulario 
     const handelInfoInput = () => {
-        const isNameDimention = arrayNamesDimentions.filter((element) => inputInfo === element && element)
+        const isNameDimention = listNameAllDimentoins.filter((element) => inputInfo === element && element)
         if (isNameDimention.length) {
             console.log('wolas');
         }
@@ -129,6 +189,7 @@ function SearchBox(props) {
             //value={dadState}
             >
                 {/*dataSelect.map((objet, index) => {
+                    console.log(objet)
                     return (
                         <option key={index.toString()} value={objet.value}>{objet.name}</option>
                     )
@@ -136,6 +197,31 @@ function SearchBox(props) {
             </select>
         );
     };
+};
+
+function ResidentInfo(props) {
+    const { index, currentIndex, name, status, type, species, image, onClick, id } = props;
+    return (
+        <div className={index === currentIndex ? "containerCardResidentAnimation" : "containerCardResident"} key={id.toString()}>
+            <div className={index === currentIndex ? "residentInfoImageAnimation" : "residentInfoImage"}>
+
+                <div className="testcontainerInfo" >
+                    <p className="name">{name}</p>
+                    <p className="textGeneral">status: {status}</p>
+                    <p className="textGeneral">type: {type}</p>
+                    <p className="textGeneral">specie: {species}</p>
+                </div>
+
+                <div className="residenData" onClick={onClick}>
+                    <img src={image} alt={index.toString()} style={{ flex: 1 }} className="imagePersonage" />
+                    {
+                        index === currentIndex || <h1 className="nameCharacter">{name}</h1>
+                    }
+                </div>
+
+            </div>
+        </div>
+    );
 };
 
 function LocationInfo({ type, cityName, dimension, residents }) {

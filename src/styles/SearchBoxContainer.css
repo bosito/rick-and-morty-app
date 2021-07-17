@@ -5,6 +5,7 @@
   height: 100vh;
   background: url("https://wallpaperaccess.com/full/238191.png") center
     center/cover no-repeat;
+  background-attachment: fixed;
   position: relative;
   display: flex;
   flex-direction: row;

@@ -11,7 +11,7 @@ export default function App() {
     setTimeout(() => {
       setNavigation("menuPrincipal");
     }, 5000);
-  }, [])
+  }, []);
 
   return (
     <div className="containerPrincipal">
@@ -28,44 +28,6 @@ export default function App() {
           </div>
         )
       }
-    </div>
-  );
-};
-
-/**
- * componente para todo lo referente a la ubucacion y los caracteres
- */
-
-function LocationContainer({ }) {
-  return (
-    <div>
-
-    </div>
-  );
-};
-
-function ResidenContainer({ }) {
-  return (
-    <div>
-
-    </div>
-  );
-};
-
-
-/**
- * debe mostar la ciguiente informcion.
- * nombre, 
- * imagen,
- * estatus,
- * lugar de origen,
- * la cantidad de episodios en ls que aparece.
- */
-
-function ResidentInfo({ }) {
-  return (
-    <div>
-
     </div>
   );
 };

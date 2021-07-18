@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import LoadingComponent from './componets/LoadingComponent.js';
 import MenuPrincipal from './views/MenuPrincipal.js';
 import SearchBoxContainer from './views/SearchBoxContainer.js';
@@ -6,7 +6,7 @@ import './styles/App.css';
 
 export default function App() {
   const [naivigation, setNavigation] = useState("loading");
-  
+
   return (
     <div className="containerPrincipal">
       {

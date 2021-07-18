@@ -5,13 +5,15 @@ import secondLoading from '../animaciones/4041-portal-shoot.json';
 import '../styles/loadingComponent.css';
 
 export default function LoadingComponent(props) {
-    const {setNavigation} = props;
+    const { setNavigation } = props;
 
     useEffect(() => {
-        setTimeout(() => {
-            setNavigation("menuPrincipal");
-        }, 4000);
-    }, []);
+        if (setNavigation) {
+            setTimeout(() => {
+                setNavigation("menuPrincipal");
+            }, 4000);
+        }
+    }, [setNavigation]);
 
     return (
         <div className="containerLoading" >

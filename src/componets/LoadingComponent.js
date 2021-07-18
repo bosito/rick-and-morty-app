@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Lottie from 'lottie-react-web';
 //import loadingMorty from '../animaciones/63889-gloot.json';
 import secondLoading from '../animaciones/4041-portal-shoot.json';
 import '../styles/loadingComponent.css';
 
-export default function LoadingComponent() {
+export default function LoadingComponent(props) {
+    const {setNavigation} = props;
+
+    useEffect(() => {
+        setTimeout(() => {
+            setNavigation("menuPrincipal");
+        }, 4000);
+    }, []);
+
     return (
         <div className="containerLoading" >
             <div className="containerAnimation" >

@@ -204,7 +204,7 @@ export default function SearchBoxContainer(props) {
 
             <motion.img
                 src={naveRick && naveRick}
-                onClick={()=>setNavigation("menuPrincipal")}
+                onClick={()=>setNavigation("loading")}
                 className="naveRick click"
                 animate={{
                     translateX: widthDisplay - 80,

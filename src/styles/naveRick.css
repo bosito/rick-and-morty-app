@@ -8,6 +8,10 @@
   /* animation: rickAnimation 5s linear 0s 1 alternate both; */
 }
 
+.click{
+  cursor: pointer;
+}
+
 /* @keyframes rickAnimation {
   0% {
     transform: translateX(0);

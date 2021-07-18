@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 
 //style
 import '../styles/SearchBoxContainer.css';
 import '../styles/locationInfo.css';
 import '../styles/residenContainer.css';
+import '../styles/naveRick.css';
+import { motion } from "framer-motion";
 //images
 import icono from '../images/icono.png';
 import titleImage from '../images/titleImage.png';
+import naveRick from '../images/naveRick.png';
 
-export default function SearchBoxContainer() {
+export default function SearchBoxContainer(props) {
 
+    const { setNavigation } = props;
+    const widthDisplay = window.innerWidth;
     const [cityName, setCityName] = useState(null);
     const [type, setType] = useState(null);
     const [dimension, setDimension] = useState(null);
@@ -18,7 +23,7 @@ export default function SearchBoxContainer() {
     const [inputInfo, setInputInfo] = useState("");
     const [listNameAllDimentoins, setListNameAllDimentoins] = useState(null);
     const [dimentionRandom, setDimentionRandom] = useState(null);
-    const [residentList, setResidentList] = useState([]);
+    const [residentList, setResidentList] = useState(null);
     const [currentIndex, setcurrentIndex] = useState(null);
 
     useEffect(() => {
@@ -33,9 +38,10 @@ export default function SearchBoxContainer() {
     useEffect(() => {
         peticionApi('location')
             .then((response) => {
-                setListNameAllDimentoins(response.results)
+                const filterNames = getNameAllDimentions(response.results);
+                setListNameAllDimentoins(filterNames);
             });
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (dimentionRandom) {
@@ -44,23 +50,41 @@ export default function SearchBoxContainer() {
             setType(dimentionRandom.type);
             setCityName(dimentionRandom.name);
         }
-    }, [dimentionRandom])
+    }, [dimentionRandom]);
 
     useEffect(() => {
         if (dimentionRandom) {
 
-            const getIdsCharacter = async () => {
-                const idsResidents = await dimentionRandom.residents.map((residentLink) => {
+            const getIdsCharacterInicial = async (arrayDimentio) => {
+                const idsResidents = await arrayDimentio.residents.map((residentLink) => {
                     const element = residentLink.split("/");
                     return element[element.length - 1]
                 });
                 residentesApi(idsResidents);
-            }
+            };
 
-            getIdsCharacter();
-
+            getIdsCharacterInicial(dimentionRandom);
         }
     }, [dimentionRandom]);
+
+    const getNameAllDimentions = (data) => {
+        const listData = [...data]
+
+        const filterNames = [];
+        for (let index = 0; index < listData.length; index++) {
+            filterNames.push(listData[index].name)
+        }
+
+        return filterNames;
+    };
+
+    const getIdsCharacter = async (arrayDimentio) => {
+        const idsResidents = await arrayDimentio.residents.map((residentLink) => {
+            const element = residentLink.split("/");
+            return element[element.length - 1]
+        });
+        residentesApi(idsResidents);
+    };
 
     const peticionApi = async (url, idUrl) => {
         let newUrl;
@@ -77,6 +101,15 @@ export default function SearchBoxContainer() {
         };
     };
 
+    const newLocatization = async (nameDimension) => {
+        const response = await axios.get(`https://rickandmortyapi.com/api/location/?name=${nameDimension.toString()}`);
+        try {
+            return response.data
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const residentesApi = async (idsCharacters) => {
         const response = await axios.get(`https://rickandmortyapi.com/api/character/${idsCharacters}`);
         try {
@@ -84,8 +117,7 @@ export default function SearchBoxContainer() {
         } catch (error) {
             console.log(error);
         }
-
-    }
+    };
 
     const openClose = (index) => {
         if (currentIndex === index) {
@@ -94,7 +126,28 @@ export default function SearchBoxContainer() {
             setcurrentIndex(index);
         }
 
-    }
+    };
+
+    const handelInfoInput = () => {
+        const isNameDimention = listNameAllDimentoins.filter((element) => inputInfo === element && element)
+        //Earth (C-137)
+        //Citadel of Ricks
+        if (isNameDimention.length) {
+            newLocatization(inputInfo)
+                .then((res) => {
+                    const respuesta = res.results[0];
+                    setDimension(respuesta.dimension);
+                    setResidents(respuesta.residents.length);
+                    setType(respuesta.type);
+                    setCityName(respuesta.name);
+                    getIdsCharacter(respuesta);
+                    setcurrentIndex(null);
+                })
+                .catch((err) => console.log(err))
+        } else {
+
+        }
+    };
 
     return (
         <div style={{ flex: 1 }}>
@@ -109,6 +162,7 @@ export default function SearchBoxContainer() {
                     <SearchBox
                         inputInfo={inputInfo}
                         setInputInfo={setInputInfo}
+                        handelInfoInput={handelInfoInput}
                         listNameAllDimentoins={listNameAllDimentoins}
                     />
                 </div>
@@ -119,46 +173,56 @@ export default function SearchBoxContainer() {
                     residents={residents}
                 />
             </div>
-            <div className="residenContainer">
+            {residentList && (
+                <div className="residenContainer">
+                    <div className="containerResidentData">
 
-                <div className="containerResidentData">
+                        {residentList.length > 0 && (
+                            residentList?.map((element, index) => {
+                                const { id, name, status, species, type, image, } = element;
+                                return (
+                                    <Fragment key={index.toString()}>
+                                        <ResidentInfo
+                                            id={id}
+                                            index={index}
+                                            currentIndex={currentIndex}
+                                            name={name}
+                                            status={status}
+                                            type={type ? type : "unknown"}
+                                            species={species}
+                                            image={image}
+                                            onClick={() => openClose(index)}
+                                        />
+                                    </Fragment>
+                                )
+                            })
+                        )}
 
-                    {residentList.length > 0 && (
-                        residentList?.map((element, index) => {
-                            const { id, name, status, species, type, image, } = element;
-                            return (
-                                <ResidentInfo
-                                    id={id}
-                                    index={index}
-                                    currentIndex={currentIndex}
-                                    name={name}
-                                    status={status}
-                                    type={type ? type : "unknown"}
-                                    species={species}
-                                    image={image}
-                                    onClick={() => openClose(index)}
-                                />
-                            )
-                        })
-                    )}
+                    </div>
                 </div>
+            )}
 
-            </div>
+            <motion.img
+                src={naveRick && naveRick}
+                onClick={()=>setNavigation("menuPrincipal")}
+                className="naveRick click"
+                animate={{
+                    translateX: widthDisplay - 80,
+                    display: ["flex", "none"]
+                }}
+                transition={{
+                    duration: 5,
+                    delay: 5,
+                    ease: "linear"
+                }}
+            />
 
         </div>
     );
 };
 
 function SearchBox(props) {
-    const { inputInfo, setInputInfo, listNameAllDimentoins } = props;
-
-    //validacion del formulario 
-    const handelInfoInput = () => {
-        const isNameDimention = listNameAllDimentoins.filter((element) => inputInfo === element && element)
-        if (isNameDimention.length) {
-            console.log('wolas');
-        }
-    };
+    const { inputInfo, setInputInfo, handelInfoInput, listNameAllDimentoins } = props;
 
     return (
         <>
@@ -173,6 +237,10 @@ function SearchBox(props) {
                 value={inputInfo}
                 onChange={(e) => setInputInfo(e.target.value)}
             />
+            <SelectComponet
+                setInputInfo={setInputInfo}
+                inputInfo={inputInfo}
+            />
             <button
                 className="button"
                 onClick={handelInfoInput}
@@ -182,18 +250,19 @@ function SearchBox(props) {
         </>
     );
 
-    function SelectComponet({ title, value }) {
+    function SelectComponet({ setInputInfo, inputInfo }) {
         return (
             <select className="amount"
-            //onChange={onChange} 
-            //value={dadState}
+                onChange={(e) => setInputInfo(e.target.value)}
+                value={inputInfo}
             >
-                {/*dataSelect.map((objet, index) => {
-                    console.log(objet)
-                    return (
-                        <option key={index.toString()} value={objet.value}>{objet.name}</option>
-                    )
-                })*/}
+                {listNameAllDimentoins && (
+                    listNameAllDimentoins.map((objet, index) => {
+                        return (
+                            <option key={index.toString()} value={objet}>{objet}</option>
+                        )
+                    })
+                )}
             </select>
         );
     };
@@ -205,7 +274,7 @@ function ResidentInfo(props) {
         <div className={index === currentIndex ? "containerCardResidentAnimation" : "containerCardResident"} key={id.toString()}>
             <div className={index === currentIndex ? "residentInfoImageAnimation" : "residentInfoImage"}>
 
-                <div className="testcontainerInfo" >
+                <div className={index === currentIndex ? "testcontainerInfoAnimation" : "testcontainerInfo"} >
                     <p className="name">{name}</p>
                     <p className="textGeneral">status: {status}</p>
                     <p className="textGeneral">type: {type}</p>

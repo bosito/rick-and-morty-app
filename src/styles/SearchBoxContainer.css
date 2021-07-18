@@ -83,6 +83,7 @@
   height: 100px;
 }
 
+.amount,
 .button {
   width: 250px;
   height: 25px;
@@ -95,6 +96,11 @@
   -webkit-backdrop-filter: blur( 0.0px );
   font-family: "Press Start 2P", cursive;
   transition: 1s;
+}
+
+.amount{
+  text-align: center;
+  font-size: 9px;
 }
 
 .button:hover{

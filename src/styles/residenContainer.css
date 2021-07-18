@@ -84,8 +84,27 @@
   color: #00b0c8;
 }
 
+/* animacion para el contenedor de las cards */
+
 .testcontainerInfo {
   position: absolute;
+  cursor: default;
+  opacity: 0;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 200px;
+  height: 100%;
+  transition: 1s;
+}
+
+.testcontainerInfoAnimation {
+  transition: 2s 1.7s;
+  cursor: default;
+  position: absolute;
+  opacity: 1;
   right: 0px;
   display: flex;
   flex-direction: column;
@@ -106,6 +125,7 @@
 
 .textGeneral{
   color: white;
+  text-align: center;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
 }

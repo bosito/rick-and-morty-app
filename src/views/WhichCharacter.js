@@ -95,7 +95,7 @@ export default function WhichCharacter(props) {
                                             character && (
                                                 <>
                                                     <div>
-                                                        <h3 className="name" >{character.name}</h3>
+                                                        <h3 className="name" > Tu Personaie es: {character.name}</h3>
                                                         <img src={character.image} alt="img_Character"
                                                             style={{ width: 250, height: 300, borderRadius: 10 }}
                                                         />

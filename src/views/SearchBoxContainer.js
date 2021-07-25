@@ -28,7 +28,7 @@ export default function SearchBoxContainer(props) {
 
     useEffect(() => {
         //el 108 es el total de dimenciones que hay.
-        const numberRandom = Math.floor(Math.random() * 108).toString();
+        const numberRandom = (Math.floor(Math.random() * (180 - 1)) + 1).toString();
         peticionApi('location', numberRandom)
             .then((response) => {
                 setDimentionRandom(response)

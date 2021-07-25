@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LoadingComponent from './componets/LoadingComponent.js';
 import MenuPrincipal from './views/MenuPrincipal.js';
 import SearchBoxContainer from './views/SearchBoxContainer.js';
+import WhichCharacter from './views/WhichCharacter.js'
 import './styles/App.css';
 
 export default function App() {
@@ -17,9 +18,7 @@ export default function App() {
         ) : naivigation === "tareaView" ? (
           <SearchBoxContainer setNavigation={setNavigation} />
         ) :  naivigation === "extraView" && (
-          <div>
-
-          </div>
+          <WhichCharacter setNavigation={setNavigation} />
         )
       }
     </div>
